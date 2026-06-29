@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ośrodek Szkolenia Kierowców Juszczak. Prawo jazdy z pewnością siebie. Nowoczesne metody nauczania i wysoka zdawalność.">
+    <title>OSK Juszczak | Nowoczesna Szkoła Jazdy</title>
+    
+    <!-- Preconnect dla wydajności ładowania fontów -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Nowoczesny system zmiennych CSS */
+            --color-primary: #e63946; /* Dynamiczna czerwień */
+            --color-primary-hover: #d62839;
+            --color-dark: #111827;
+            --color-light: #f3f4f6;
+            --color-white: #ffffff;
+            --color-gray: #6b7280;
+            
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 4rem;
+            
+            --radius-md: 8px;
+            --radius-lg: 16px;
+            
+            --transition-fast: 0.2s ease-in-out;
+            --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Reset CSS & Base Styles */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--color-dark);
+            background-color: var(--color-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Użyteczność - Screen Reader Only */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* --- Nawigacja (Header) --- */
+        .site-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: all var(--transition-fast);
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-lg);
+        }
+
+        .nav-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .brand-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            color: var(--color-dark);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .brand-logo span {
+            color: var(--color-primary);
+        }
+
+        .main-nav {
+            display: none;
+        }
+
+        @media (min-width: 768px) {
+            .main-nav {
+                display: flex;
+                gap: var(--spacing-lg);
+                font-weight: 600;
+            }
+            .main-nav a {
+                position: relative;
+                transition: color var(--transition-fast);
+            }
+            .main-nav a:hover {
+                color: var(--color-primary);
+            }
+        }
+
+        .btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0.8rem 1.8rem;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            box-shadow: 0 4px 14px 0 rgba(230, 57, 70, 0.39);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(230, 57, 70, 0.23);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--color-dark);
+            border: 2px solid var(--color-dark);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--color-dark);
+            color: var(--color-white);
+        }
+
+        /* --- Sekcja Hero --- */
+        .hero {
+            position: relative;
+            padding-top: 140px; /* Kompensacja fixed headera */
+            padding-bottom: var(--spacing-xl);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: radial-gradient(circle at 80% 20%, rgba(230, 57, 70, 0.05) 0%, transparent 40%);
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-xl);
+            align-items: center;
+        }
+
+        @media (min-width: 992px) {
+            .hero-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .hero-content {
+            animation: slideUp 0.8s var(--transition-smooth) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: rgba(230, 57, 70, 0.1);
+            color: var(--color-primary);
+            font-weight: 600;
+            font-size: 0.875rem;
+            border-radius: 50px;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: var(--spacing-md);
+            letter-spacing: -0.02em;
+        }
+
+        .hero-description {
+            font-size: 1.125rem;
+            color: var(--color-gray);
+            margin-bottom: var(--spacing-lg);
+            max-width: 500px;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+        }
+
+        /* Dynamika wizualna (Hero Visual) */
+        .hero-visual {
+            position: relative;
+            animation: fadeIn 1s var(--transition-smooth) forwards;
+            animation-delay: 0.3s;
+            opacity: 0;
+        }
+
+        .visual-frame {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4/3;
+            background-color: var(--color-white);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('https://www.autojuszczak.com.pl/assets/img/hero.png'); /* Fallback/Placeholder */
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .visual-frame::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(17,24,39,0.2) 0%, transparent 100%);
+        }
+
+        .floating-card {
+            position: absolute;
+            bottom: -20px;
+            left: -20px;
+            background: var(--color-white);
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--radius-md);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .floating-card-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(230, 57, 70, 0.1);
+            color: var(--color-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        /* Animacje Keyframes */
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Poprawna semantycznie nawigacja -->
+    <header class="site-header">
+        <div class="container nav-wrapper">
+            <a href="#" class="brand-logo" aria-label="Strona główna OSK Juszczak">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-primary);">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M12 8v4l3 3"></path>
+                </svg>
+                OSK <span>Juszczak</span>
+            </a>
+            
+            <nav class="main-nav" aria-label="Nawigacja główna">
+                <a href="#kursy">Kursy</a>
+                <a href="#strefa-kursanta">Strefa Kursanta</a>
+                <a href="#o-nas">O nas</a>
+                <a href="#kontakt">Kontakt</a>
+            </nav>
+
+            <a href="tel:+48510285635" class="btn btn-primary" aria-label="Zadzwoń do nas">
+                Skontaktuj się
+            </a>
+        </div>
+    </header>
+
+    <!-- Semantyczna sekcja główna z hierarchią H1 -->
+    <main>
+        <section class="hero" aria-labelledby="hero-heading">
+            <div class="container hero-grid">
+                
+                <!-- Treść tekstowa i CTA -->
+                <div class="hero-content">
+                    <span class="badge">Zapisy na wrzesień trwają</span>
+                    <h1 id="hero-heading" class="hero-title">Zdobądź prawo jazdy z pewnością siebie.</h1>
+                    <p class="hero-description">
+                        Nowoczesna flota, bezstresowe podejście i instruktorzy, którym zależy na Twoim sukcesie. Dołącz do najlepszych kierowców w regionie.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="#zapisz-sie" class="btn btn-primary">Rozpocznij kurs</a>
+                        <a href="#cennik" class="btn btn-outline">Sprawdź ofertę</a>
+                    </div>
+                </div>
+
+                <!-- Komponent wizualny z mikro-animacją -->
+                <div class="hero-visual">
+                    <div class="visual-frame">
+                        <!-- Obraz zaciągnięty referencyjnie z oryginału jako tło CSS dla bezpieczeństwa layoutu -->
+                    </div>
+                    
+                    <div class="floating-card" aria-hidden="true">
+                        <div class="floating-card-icon">#1</div>
+                        <div>
+                            <div style="font-weight: 800; color: var(--color-dark);">Wysoka zdawalność</div>
+                            <div style="font-size: 0.875rem; color: var(--color-gray);">Województwo łódzkie</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Skrypt inicjalizujący np. obsługę scrolla dla headera (opcjonalny, lekki UX enhancement) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const header = document.querySelector('.site-header');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.style.boxShadow = '0 4px 20px rgba(0,0,0,0.05)';
+                    header.style.padding = '0.5rem 0';
+                } else {
+                    header.style.boxShadow = 'none';
+                    header.style.padding = '0';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
