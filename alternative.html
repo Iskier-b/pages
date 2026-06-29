@@ -3,35 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OSK Juszczak | Architektura SPA</title>
+    <title>OSK Juszczak | Nowy Wymiar Jazdy</title>
     
-    <!-- Preconnect i Fonty: Inter dla optymalnej czytelności interfejsu -->
+    <!-- Optymalizacja ładowania fontów: Plus Jakarta Sans dla nowoczesnego, technicznego sznytu -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
 
     <style>
-        /* --- Architektura Zmiennych i Design System --- */
+        /* --- System Zmiennych CSS (Design Tokens) --- */
         :root {
-            --color-brand: #d32f2f;
-            --color-brand-dark: #b71c1c;
-            --color-text-main: #0f172a;
-            --color-text-muted: #475569;
-            --color-surface: #ffffff;
-            --color-background: #f8fafc;
-            --color-border: #e2e8f0;
+            --color-bg: #0f1115; /* Nowoczesny, głęboki dark mode bazowy */
+            --color-surface: #1a1d24;
+            --color-surface-hover: #232730;
+            --color-primary: #ff3366; /* Jaskrawy, cyfrowy akcent */
+            --color-text-main: #ffffff;
+            --color-text-secondary: #94a3b8;
             
-            /* Rygorystyczny system spacingu dla idealnej symetrii */
-            --space-xs: 0.5rem;
-            --space-sm: 1rem;
-            --space-md: 2rem;
-            --space-lg: 4rem;
-            --space-xl: 6rem;
+            /* Matematyczna skala odstępów (oparta na 8px) */
+            --gap-sm: 8px;
+            --gap-md: 16px;
+            --gap-lg: 24px;
+            --gap-xl: 32px;
             
-            --font-base: 18px; /* Podwyższona bazowa wielkość dla lepszej czytelności */
+            --radius-lg: 24px;
+            --radius-full: 999px;
+            
+            /* Płynna typografia (Fluid Typography) - koniec z małymi literkami */
+            --text-base: clamp(1.125rem, 1vw + 0.8rem, 1.25rem);
+            --text-lg: clamp(1.5rem, 2vw + 1rem, 2rem);
+            --text-xl: clamp(2.5rem, 4vw + 1rem, 4.5rem);
         }
 
-        /* --- Reset i Baza --- */
+        /* --- Global Reset & Accessibility --- */
         *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
@@ -39,354 +43,271 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            font-size: var(--font-base);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--color-bg);
             color: var(--color-text-main);
-            background-color: var(--color-background);
-            line-height: 1.6;
+            font-size: var(--text-base);
+            line-height: 1.5;
             -webkit-font-smoothing: antialiased;
+            padding: var(--gap-lg); /* Zewnętrzny margines ekranu */
         }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-            transition: color 0.2s ease;
-        }
+        a { text-decoration: none; color: inherit; }
+        img { display: block; max-width: 100%; height: auto; }
 
-        ul {
-            list-style: none;
-        }
-
-        /* --- Layout Główny --- */
-        .app-container {
+        /* --- Floating Navigation --- */
+        .floating-nav {
+            position: fixed;
+            top: var(--gap-lg);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(26, 29, 36, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: var(--gap-sm) var(--gap-lg);
+            border-radius: var(--radius-full);
             display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1440px;
-            margin: 0 auto;
-            padding: 0 var(--space-md);
-        }
-
-        /* --- Nawigacja --- */
-        .topbar {
-            background-color: var(--color-surface);
-            border-bottom: 1px solid var(--color-border);
-            position: sticky;
-            top: 0;
+            align-items: center;
+            gap: var(--gap-xl);
             z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .nav-grid {
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            align-items: center;
-            height: 80px;
-            gap: var(--space-md);
-        }
-
-        .brand {
-            font-weight: 900;
-            font-size: 1.5rem;
-            text-transform: uppercase;
-            letter-spacing: -0.05em;
-        }
-
-        .brand span { color: var(--color-brand); }
-
-        .nav-links {
-            display: flex;
-            justify-content: center;
-            gap: var(--space-md);
-            font-weight: 500;
-        }
-
-        .nav-link {
-            padding: var(--space-xs) 0;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            color: var(--color-brand);
-        }
-
-        .nav-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-color: var(--color-brand);
-            border-radius: 2px;
-        }
-
-        .btn {
-            display: inline-block;
-            background-color: var(--color-brand);
-            color: var(--color-surface);
-            font-weight: 700;
-            padding: 0.75rem 2rem;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
-            text-align: center;
-            transition: background-color 0.2s ease;
-        }
-
-        .btn:hover { background-color: var(--color-brand-dark); }
-
-        /* --- Obszar Widoku SPA --- */
-        #router-view {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            animation: fadeIn 0.4s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --- Komponenty Podstron --- */
-        
-        /* Hero Section (Strona Główna) */
-        .hero-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-lg);
-            align-items: center;
-            padding: var(--space-xl) 0;
-        }
-
-        .hero-text h1 {
-            font-size: clamp(2.5rem, 4vw, 4.5rem);
-            line-height: 1.1;
-            font-weight: 900;
-            margin-bottom: var(--space-sm);
+        .nav-brand {
+            font-weight: 800;
+            font-size: 1.2rem;
             letter-spacing: -0.03em;
         }
 
-        .hero-text p {
-            font-size: 1.25rem;
-            color: var(--color-text-muted);
-            margin-bottom: var(--space-md);
-            max-width: 540px;
+        .nav-brand span { color: var(--color-primary); }
+
+        .nav-menu {
+            display: flex;
+            gap: var(--gap-lg);
+            font-weight: 600;
+            font-size: 1rem;
         }
 
-        .hero-image-wrapper {
-            position: relative;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            /* Wymuszona symetria i proporcje */
-            aspect-ratio: 4/3;
+        .nav-menu a {
+            padding: calc(var(--gap-sm) / 2) 0;
+            color: var(--color-text-secondary);
+            transition: color 0.2s ease;
         }
 
-        .hero-image-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
+        .nav-menu a:hover { color: var(--color-text-main); }
+
+        .btn {
+            background: var(--color-primary);
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 1rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Sekcja Kursów (Podstrona 2) */
-        .page-header {
-            text-align: center;
-            padding: var(--space-lg) 0 var(--space-md);
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.4);
         }
 
-        .page-header h1 {
-            font-size: 3rem;
-            font-weight: 900;
+        /* --- Bento Grid Architecture --- */
+        .main-container {
+            max-width: 1600px;
+            margin: 100px auto 0; /* Odstęp na pływającą nawigację */
         }
 
-        /* Symetryczny Grid Kart */
-        .course-grid {
+        .bento-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: var(--space-md);
-            padding-bottom: var(--space-xl);
+            grid-template-columns: repeat(12, 1fr);
+            grid-auto-rows: minmax(280px, auto);
+            gap: var(--gap-lg);
         }
 
-        .course-card {
+        .bento-item {
             background: var(--color-surface);
-            border: 1px solid var(--color-border);
-            border-radius: 8px;
-            padding: var(--space-md);
+            border-radius: var(--radius-lg);
+            padding: var(--gap-xl);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.03);
             display: flex;
             flex-direction: column;
-            height: 100%;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: background 0.3s ease;
         }
 
-        .course-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        .bento-item:hover {
+            background: var(--color-surface-hover);
         }
 
-        .course-card img {
+        /* Przypisania modułów do siatki */
+        .item-hero {
+            grid-column: span 8;
+            grid-row: span 2;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--color-surface) 0%, #111 100%);
+        }
+
+        .item-visual {
+            grid-column: span 4;
+            grid-row: span 2;
+            padding: 0;
+        }
+
+        .item-visual img {
             width: 100%;
-            height: 200px;
+            height: 100%;
             object-fit: cover;
-            border-radius: 4px;
-            margin-bottom: var(--space-sm);
         }
 
-        .course-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: var(--space-xs);
+        .item-card {
+            grid-column: span 4;
+            justify-content: space-between;
         }
 
-        .course-desc {
-            color: var(--color-text-muted);
-            margin-bottom: var(--space-md);
-            flex-grow: 1;
+        .item-wide {
+            grid-column: span 8;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        /* RWD */
-        @media (max-width: 992px) {
-            .hero-section {
-                grid-template-columns: 1fr;
-                text-align: center;
-                padding: var(--space-lg) 0;
-            }
-            .hero-text p {
-                margin: 0 auto var(--space-md);
-            }
-            .nav-links {
-                display: none; /* W realnym projekcie tutaj wchodzi Hamburger Menu */
-            }
+        /* --- Typografia Modułów --- */
+        h1 {
+            font-size: var(--text-xl);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -0.04em;
+            margin-bottom: var(--gap-lg);
+        }
+
+        h1 span {
+            color: var(--color-primary);
+        }
+
+        h2 {
+            font-size: var(--text-lg);
+            font-weight: 800;
+            margin-bottom: var(--gap-sm);
+        }
+
+        p {
+            color: var(--color-text-secondary);
+            max-width: 600px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(255, 51, 102, 0.15);
+            color: var(--color-primary);
+            border-radius: var(--radius-full);
+            font-size: 0.875rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--gap-md);
+        }
+
+        .icon-wrapper {
+            width: 56px;
+            height: 56px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--gap-lg);
+        }
+
+        /* --- RWD (Responsywność) --- */
+        @media (max-width: 1024px) {
+            .item-hero { grid-column: span 12; }
+            .item-visual { grid-column: span 12; grid-row: span 1; aspect-ratio: 16/9; }
+            .item-card { grid-column: span 6; }
+            .item-wide { grid-column: span 12; flex-direction: column; align-items: flex-start; gap: var(--gap-lg); }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu { display: none; }
+            .item-card { grid-column: span 12; }
+            body { padding: var(--gap-md); }
+            .floating-nav { width: calc(100% - var(--gap-lg)); justify-content: space-between; }
         }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
-        <!-- Globalny Nagłówek -->
-        <header class="topbar">
-            <div class="container nav-grid">
-                <div class="brand">OSK <span>Juszczak</span></div>
-                
-                <nav class="nav-links" aria-label="Nawigacja główna">
-                    <!-- Atrybuty data-route sterują Vanilla JS Routerem -->
-                    <a class="nav-link active" data-route="home">Strona Główna</a>
-                    <a class="nav-link" data-route="courses">Oferta i Kursy</a>
-                </nav>
-
-                <div class="nav-actions">
-                    <a href="tel:+48510285635" class="btn">Zadzwoń teraz</a>
-                </div>
-            </div>
-        </header>
-
-        <!-- Kontener renderowania podstron -->
-        <main id="router-view" class="container">
-            <!-- Tutaj wstrzykiwany jest kod z tagów <template> -->
-        </main>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- SZABLONY PODSTRON (Przechowywane w DOM)    -->
-    <!-- ========================================== -->
-
-    <!-- Szablon 1: Strona Główna -->
-    <template id="view-home">
-        <section class="hero-section">
-            <div class="hero-text">
-                <h1>Bezpieczeństwo.<br>Pewność.<br>Praktyka.</h1>
-                <p>Odrzucamy przestarzałe schematy nauczania. W OSK Juszczak skupiamy się na symetrycznym rozwoju umiejętności technicznych i pewności siebie za kierownicą. Czysta praktyka, zero straconego czasu.</p>
-                <button class="btn" onclick="document.querySelector('[data-route=\'courses\']').click()">Zobacz dostępne kursy</button>
-            </div>
-            <div class="hero-image-wrapper">
-                <!-- Wykorzystanie oryginalnego zasobu bazowego -->
-                <img src="https://www.autojuszczak.com.pl/assets/img/hero.png" alt="Kursant w nowoczesnym samochodzie szkoleniowym OSK Juszczak" loading="eager">
-            </div>
-        </section>
-    </template>
-
-    <!-- Szablon 2: Kursy i Oferta -->
-    <template id="view-courses">
-        <header class="page-header">
-            <h1>Oferta Szkoleniowa</h1>
-            <p style="color: var(--color-text-muted); font-size: 1.25rem;">Przejrzyste zasady, nowoczesna flota, doświadczona kadra.</p>
-        </header>
-        
-        <div class="course-grid">
-            <!-- Karta 1 -->
-            <article class="course-card">
-                <img src="https://www.autojuszczak.com.pl/assets/img/auto.png" alt="Samochód szkoleniowy kategorii B" loading="lazy">
-                <h2 class="course-title">Kurs Prawa Jazdy Kat. B</h2>
-                <p class="course-desc">Pełny kurs przygotowujący do egzaminu państwowego. Obejmuje zajęcia teoretyczne oraz 30 godzin jazd praktycznych po Łodzi i okolicach.</p>
-                <a href="#" class="btn" style="width: 100%; margin-top: auto;">Sprawdź cennik</a>
-            </article>
-
-            <!-- Karta 2 -->
-            <article class="course-card">
-                <div style="height: 200px; background-color: #f1f5f9; display: flex; align-items: center; justify-content: center; border-radius: 4px; margin-bottom: var(--space-sm);">
-                    <span style="color: var(--color-text-muted); font-weight: 700;">Brak zdjęcia w zasobach</span>
-                </div>
-                <h2 class="course-title">Jazdy Doszkalające</h2>
-                <p class="course-desc">Dedykowane pakiety godzin dla osób, które chcą odświeżyć swoje umiejętności lub lepiej przygotować się do nadchodzącego egzaminu.</p>
-                <a href="#" class="btn" style="width: 100%; margin-top: auto;">Zarezerwuj termin</a>
-            </article>
+    <!-- Pływająca nawigacja (Pill Nav) -->
+    <nav class="floating-nav">
+        <div class="nav-brand">OSK<span>Juszczak</span></div>
+        <div class="nav-menu">
+            <a href="#oferta">Oferta</a>
+            <a href="#flota">Flota</a>
+            <a href="#opinie">Opinie</a>
+            <a href="#kontakt">Kontakt</a>
         </div>
-    </template>
+        <a href="tel:+48510285635" class="btn">Zadzwoń</a>
+    </nav>
 
-    <!-- ========================================== -->
-    <!-- LOGIKA BIZNESOWA SPA (Vanilla JS Router)   -->
-    <!-- ========================================== -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const routerView = document.getElementById('router-view');
-            const navLinks = document.querySelectorAll('.nav-link');
+    <!-- Architektura Bento Grid -->
+    <main class="main-container">
+        <section class="bento-grid">
+            
+            <!-- Główny moduł Hero -->
+            <article class="bento-item item-hero">
+                <div>
+                    <span class="tag">Nowy system szkolenia</span>
+                    <h1>Zdobądź prawko.<br><span>Bez stresu.</span></h1>
+                    <p style="font-size: 1.25rem; margin-bottom: var(--gap-xl);">
+                        Zapomnij o przestarzałych metodach. Uczymy logicznego myślenia na drodze, techniki jazdy i pewności siebie. Skupiamy się na praktyce.
+                    </p>
+                    <a href="#zapisy" class="btn" style="padding: 16px 32px; font-size: 1.125rem;">Rozpocznij Kurs Kat. B</a>
+                </div>
+            </article>
 
-            // Funkcja renderująca odpowiedni widok
-            const renderView = (routeName) => {
-                // Pobranie szablonu po ID
-                const template = document.getElementById(`view-${routeName}`);
-                
-                if (!template) {
-                    console.error('Błąd architektury: Szablon nie istnieje.');
-                    return;
-                }
+            <!-- Moduł Wizualny -->
+            <article class="bento-item item-visual">
+                <img src="https://www.autojuszczak.com.pl/assets/img/hero.png" alt="Kursant podczas jazdy nowoczesnym autem szkoleniowym">
+            </article>
 
-                // Klonowanie i podmiana DOM
-                routerView.innerHTML = '';
-                routerView.appendChild(template.content.cloneNode(true));
+            <!-- Karta Informacyjna 1 -->
+            <article class="bento-item item-card">
+                <div>
+                    <div class="icon-wrapper">
+                        <svg width="24" height="24" fill="none" stroke="var(--color-primary)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <h2>Wysoka zdawalność</h2>
+                    <p>Nasze statystyki w łódzkim WORD mówią same za siebie. Uczymy tak, aby egzamin był tylko formalnością.</p>
+                </div>
+            </article>
 
-                // Restart animacji poprzez wymuszenie reflow
-                routerView.style.animation = 'none';
-                routerView.offsetHeight; /* trigger reflow */
-                routerView.style.animation = 'fadeIn 0.4s ease-out';
+            <!-- Karta Informacyjna 2 -->
+            <article class="bento-item item-card">
+                <div>
+                    <div class="icon-wrapper">
+                        <svg width="24" height="24" fill="none" stroke="var(--color-primary)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    </div>
+                    <h2>Elastyczny grafik</h2>
+                    <p>Jazdy dostosowane do Twojego planu dnia. Jeździmy rano, popołudniami i w weekendy. Ty decydujesz.</p>
+                </div>
+            </article>
 
-                // Aktualizacja stanu nawigacji
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if(link.dataset.route === routeName) {
-                        link.classList.add('active');
-                    }
-                });
-            };
+            <!-- Karta Szeroka (Call to Action / Info) -->
+            <article class="bento-item item-wide">
+                <div>
+                    <h2>Jazdy doszkalające</h2>
+                    <p>Masz prawo jazdy, ale boisz się jeździć? A może oblałeś egzamin i potrzebujesz szlifu? Wykup pakiet godzin z instruktorem prowadzącym.</p>
+                </div>
+                <a href="#doszkalanie" class="btn" style="background: rgba(255,255,255,0.1); color: #fff;">Sprawdź pakiety</a>
+            </article>
 
-            // Nasłuchiwanie kliknięć w nawigację
-            navLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const route = e.target.dataset.route;
-                    renderView(route);
-                });
-            });
+        </section>
+    </main>
 
-            // Inicjalizacja domyślnego widoku (Strona Główna)
-            renderView('home');
-        });
-    </script>
 </body>
 </html>
